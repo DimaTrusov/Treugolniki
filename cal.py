@@ -35,7 +35,53 @@ class TriangleValidator:
             print("Тест 2: Частично заполненные поля пройдены.")
             self.tests_passed += 1
 
-       
+        # Тесты 3-7: Позитивные кейсы
+        positive_cases = [
+            ('3', '4', '5'),
+            ('2', '3', '4'),
+            ('66', '67', '68'),
+            ('3', '3', '5'),
+            ('6', '6', '6')
+        ]
+        if (side1, side2, side3) in positive_cases:
+            print("Тесты 3-7: Позитивные случаи пройдены.")
+            self.tests_passed += 5
+
+        # Тест 8: Проверка несуществующего треугольника
+        try:
+            a, b, c = float(side1), float(side2), float(side3)
+            if a + b <= c or a + c <= b or b + c <= a:
+                print("Тест 8: Случай несуществующего треугольника пройден.")
+                self.tests_passed += 1
+        except ValueError:
+            pass
+
+        # Тест 9: Проверка на нечисловой ввод
+        try:
+            float(side1)
+            float(side2)
+            float(side3)
+        except ValueError:
+            print("Тест 9: Обнаружен нечисловой ввод.")
+            self.tests_passed += 1
+
+        # Тест 10: Проверка больших чисел
+        try:
+            if any(float(s) > 4_294_967_295 for s in (side1, side2, side3)):
+                print("Тест 10: Обработка больших чисел пройдена.")
+                self.tests_passed += 1
+        except ValueError:
+            pass
+
+        # Тест 11: SQL-инъекция (простая проверка ключевых слов)
+        if any(keyword in str(s).lower() for s in (side1, side2, side3) for keyword in ['select', 'or', 'where']):
+            print("Тест 11: SQL-инъекция обнаружена и обработана.")
+            self.tests_passed += 1
+
+        # Тест 12: XSS-уязвимость (проверка на <script>)
+        if any('<script>' in str(s).lower() for s in (side1, side2, side3)):
+            print("Тест 12: XSS-уязвимость обнаружена.")
+            self.tests_passed += 1
 
     def detect_bugs(self, side1, side2, side3):
         # Баг 1: Поле side3 не проверяется если оно '0', а другие заполнены
